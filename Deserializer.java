@@ -22,7 +22,8 @@ public class Deserializer {
 		Object obj = null;
 		List<Element> list = doc.getRootElement().getChildren();
 		Object objInstance;
-		int id;
+		String id;
+		id = list.get(0).getAttributeValue("id");
 		
 		for (Element e : list){
 			String className = e.getAttributeValue("class");
@@ -41,7 +42,7 @@ public class Deserializer {
 			map.put(e.getAttributeValue("id"), objInstance);
 		}
 		deserializeFields(list);
-		return map.get(list.get(0).getAttribute("id"));
+		return map.get(id);
 		
 	}
     public void deserializeFields(List<Element> objectList) throws Exception
@@ -77,19 +78,14 @@ public class Deserializer {
             }
             else
             {
-                for(int j = 0; j < fieldList.size(); j++)
-                {
-                    String declaringClassName = fieldList.get(j).getAttributeValue("declaringclass");
-                    Class declaredClass = Class.forName(declaringClassName);
+                String declaringClassName = fieldList.get(0).getAttributeValue("declaringclass");
+                Class declaredClass = Class.forName(declaringClassName);
                  
-                    String fieldName = fieldList.get(j).getAttributeValue("name");
-                    Field field = declaredClass.getDeclaredField(fieldName);
-                    field.setAccessible(true);
-                 
-                    //Set fields
-                    deserializeValue(field, instance, fieldList.get(j).getChildren().get(0));
-                 
-                }
+                String fieldName = fieldList.get(0).getAttributeValue("name");
+                Field field = declaredClass.getDeclaredField(fieldName);
+                field.setAccessible(true);
+                    
+                      
             }
         }
     }

@@ -31,24 +31,19 @@ public class Connection {
 	public void send(String doc) throws IOException{
 		ServerSocket server = new ServerSocket(port);
 		System.out.println("Waiting for connection...");
-		System.out.println(server.getInetAddress());
 		Socket senderSocket = server.accept();
 		System.out.println("Connection successful.");
-		sendFile(doc, senderSocket);
-		
-	}
-	
-	public void sendFile(String doc, Socket sender) throws IOException{
 		File fileToSend = new File(doc);
 		byte[] byteArray = new byte[(int)fileToSend.length()];
 		BufferedInputStream bis = new BufferedInputStream(new FileInputStream(fileToSend));
-		OutputStream os = sender.getOutputStream();
-		os = sender.getOutputStream();
+		bis.read(byteArray, 0, byteArray.length);
+		OutputStream os = senderSocket.getOutputStream();
+		os = senderSocket.getOutputStream();
 		System.out.println("Sending file: " + doc);
 		os.write(byteArray, 0, byteArray.length);
 		os.flush();
-		System.out.println("File sent);");
-		sender.close();
+		System.out.println("File sent");
+		senderSocket.close();
 	}
 	
 	public void receive() throws Exception{

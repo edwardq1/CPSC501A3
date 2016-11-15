@@ -43,15 +43,17 @@ public class Serializer {
 		else
 			serializeCollection(obj,objectElement);
 	}
-	
+
 	public void serializeFields(Object obj, Element element) throws IllegalArgumentException, IllegalAccessException{
 		Field[] fields = obj.getClass().getDeclaredFields();
 		if(fields.length > 0){
 			for(Field field : fields){
 				field.setAccessible(true);
-				Element fieldElement = new Element("fields");
+				Element fieldElement = new Element("field");
 				fieldElement.setAttribute("name", field.getName());
 				fieldElement.setAttribute("declaringclass", field.getDeclaringClass().getName());
+				element.addContent(fieldElement);
+				
 				serializeFieldValue(field, obj, element);
 			}
 		}
@@ -63,6 +65,7 @@ public class Serializer {
 			Object value = field.get(obj);
 			serializeObject(value);
 			referenceElement.addContent(map.get(value).toString());
+			element.addContent(referenceElement);
 		}
 		else if(field.getType().isPrimitive()){
 			Element valueElement = new Element("value");
@@ -107,7 +110,7 @@ public class Serializer {
 	
 	
 	public void serializePrimitive(Object obj, Element element){
-		Element valueElement = new Element("Value");
+		Element valueElement = new Element("value");
 		valueElement.addContent(obj.toString());
 		element.addContent(valueElement);
 	}

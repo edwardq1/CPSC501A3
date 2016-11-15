@@ -42,7 +42,7 @@ public class ObjectCreator {
 	}
 	
 	public void setPrimitive(Object obj, Field field) throws IllegalArgumentException, IllegalAccessException{
-		System.out.println("Change field " + field.getType()+""+ field.getName() + "to: ");
+		System.out.println("Change field " + field.getType()+" "+ field.getName() + " to: ");
 		String value = in.next();
 		field.set(obj, typeCheck(field.getType(), value));
 	}
@@ -52,7 +52,7 @@ public class ObjectCreator {
 		int length = Array.getLength(array);
 		for (int i = 0; i < length; i++){
 			if (!array.getClass().getComponentType().isPrimitive()){
-				System.out.println("Object reference to " + array.getClass().getComponentType() + "at index" + i);
+				System.out.println("Object reference to " + array.getClass().getComponentType() + " at index " + i);
 				initializeObject(Array.get(array, i));
 			}
 			else{
