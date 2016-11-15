@@ -37,6 +37,16 @@ public class ObjectCreator {
 			if(f.getType().isPrimitive()){
 				setPrimitive(obj, f);
 			}
+			else if (f.getType().isArray()){
+				setArrayValues(obj, f);
+			}
+			else if (f.getType().equals(Collection.class)){
+				setCollections(obj, f);
+			}
+			else{
+				System.out.println(f.getName() + "(" + f.get(obj).getClass() + "):");
+				initializeObject(f.get(obj));
+			}
 		}
 		
 	}
