@@ -3,7 +3,7 @@ public class Dealership {
 	public Car [] carArray;
 	
 	public Dealership(){
-		carArray = new Car[5];
+		carArray = new Car[3];
 		for(int i = 0; i < carArray.length; i++)
 			carArray[i] = new Car();
 	}

@@ -78,14 +78,16 @@ public class Deserializer {
             }
             else
             {
-                String declaringClassName = fieldList.get(0).getAttributeValue("declaringclass");
-                Class declaredClass = Class.forName(declaringClassName);
-                 
-                String fieldName = fieldList.get(0).getAttributeValue("name");
-                Field field = declaredClass.getDeclaredField(fieldName);
-                field.setAccessible(true);
-                    
-                      
+            	for (int j = 0; j < fieldList.size(); j++){
+	                String declaringClassName = fieldList.get(0).getAttributeValue("declaringclass");
+	                Class declaredClass = Class.forName(declaringClassName);
+	                 
+	                String fieldName = fieldList.get(0).getAttributeValue("name");
+	                Field field = declaredClass.getDeclaredField(fieldName);
+	                field.setAccessible(true);
+	                    
+	                deserializeValue(field, instance, fieldList.get(j).getChildren().get(0));
+            	}
             }
         }
     }
@@ -98,6 +100,7 @@ public class Deserializer {
         }
         else
         {
+        	System.out.println();
             // Cast each field type to a specific class
             Class fieldType = field.getType();
             field.set(instance, typeCheck(valueElement, fieldType));
