@@ -44,7 +44,7 @@ public class ObjectCreator {
 	public void setPrimitive(Object obj, Field field) throws IllegalArgumentException, IllegalAccessException{
 		System.out.println("Change field " + field.getType()+""+ field.getName() + "to: ");
 		String value = in.next();
-		field.set(obj, value);
+		field.set(obj, typeCheck(field.getType(), value));
 	}
 	
 	public void setArrayValues(Object obj, Field field) throws IllegalArgumentException, IllegalAccessException{
@@ -59,7 +59,7 @@ public class ObjectCreator {
 				System.out.println("Value of " +field.getName() + "["+i+"]" + Array.get(array, i));
 				System.out.println("Enter a new value for it: ");
 				String user = in.next();
-				Array.set(array, i, user);
+				Array.set(array, i, typeCheck(array.getClass().getComponentType(), user));
 			}
 		}
 	}
@@ -70,7 +70,33 @@ public class ObjectCreator {
 			Object value = collectionOfObjects.next();
 			initializeObject(value);
 		}
-		
-		
 	}
+	
+	
+    // Extracted to check primitive types
+    public Object typeCheck(Class type, String input)
+    {
+        if(type.getName() == "int")
+            return Integer.parseInt(input);
+        else if(type.getName() == "char")
+            return input.charAt(0);
+        else if(type.getName() == "double")
+            return Double.parseDouble(input);
+        else if(type.getName() == "float")
+            return Float.parseFloat(input);
+        else if(type.getName() =="long")
+            return Long.parseLong(input);
+        else if(type.getName() == "short")
+            return Short.parseShort(input);
+        else if(type.getName() == "boolean")
+        {
+            if(input == "true")
+                return Boolean.TRUE;
+            else if(input == "false")
+                return Boolean.FALSE;
+            return null;
+        }
+        else
+            return null;
+    }
 }

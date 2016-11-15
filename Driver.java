@@ -1,13 +1,18 @@
+import java.io.BufferedOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 import org.jdom2.Document;
+import org.jdom2.output.Format;
+import org.jdom2.output.XMLOutputter;
 
 public class Driver {
 
-	public static void main(String[] args) throws IOException, IllegalArgumentException, IllegalAccessException{
+	public static void main(String[] args) throws Exception{
 		//Test if the user is a sender or receiver
 		List<Object> obj = new ArrayList<Object>();
 		String info = args[0].toLowerCase();
@@ -50,20 +55,25 @@ public class Driver {
 				System.out.println("Object has been successfully added.");
 			}
 			System.out.println("****Objects are now ready to be sent.****");
-	
-			String OutputFile = "output.xml";
-			Serializer serialize = new Serializer();
+	        String OUTPUTFILE = "output.xml";
+	        Serializer serialize = new Serializer();
 			for (Object o : obj){
 				Document doc = serialize.serialize(o);
+		        XMLOutputter xmlOutput = new XMLOutputter();
+		         
+		        xmlOutput.setFormat(Format.getPrettyFormat());
+		        xmlOutput.output(doc, new FileWriter(OUTPUTFILE));
+		         
+				Connection c = new Connection(info, port, OUTPUTFILE);
 			}
-			Connection c = new Connection(info, port);
 		}
 		else if (info.equals("receive")){
 			Scanner in =  new Scanner(System.in);
 			System.out.println("You are a receiver...");
 			System.out.println("Enter the port: ");
 			int port = in.nextInt();
-			Connection c = new Connection(info, port);
+			Connection c = new Connection(info, port, "");
+
 		}
 		else{
 			System.out.println("Incorrect information...");

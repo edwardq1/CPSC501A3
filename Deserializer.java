@@ -18,7 +18,7 @@ public class Deserializer {
 		map = new HashMap();
 	}
 	
-	public void deserializeObject(Document doc) throws NoSuchMethodException, SecurityException, ClassNotFoundException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException{
+	public Object deserializeObject(Document doc) throws Exception{
 		Object obj = null;
 		List<Element> list = doc.getRootElement().getChildren();
 		Object objInstance;
@@ -40,6 +40,9 @@ public class Deserializer {
 			
 			map.put(e.getAttributeValue("id"), objInstance);
 		}
+		deserializeFields(list);
+		return map.get(list.get(0).getAttribute("id"));
+		
 	}
     public void deserializeFields(List<Element> objectList) throws Exception
     {
@@ -53,7 +56,7 @@ public class Deserializer {
                 Class componentType = instance.getClass().getComponentType();
                 for(int j = 0; j < fieldList.size(); j++)
                 {
-                    Array.set(instance, j, componentType);
+                    Array.set(instance, j, typeCheck(fieldList.get(j),componentType));
                 }
                  
             }
@@ -101,7 +104,23 @@ public class Deserializer {
         {
             // Cast each field type to a specific class
             Class fieldType = field.getType();
-            field.set(instance, valueElement.getText());
+            field.set(instance, typeCheck(valueElement, fieldType));
         }
+    }
+    
+    
+    public Object typeCheck(Element valueElement, Class fieldType)
+    {
+        if(fieldType.equals(int.class))
+            return Integer.valueOf(valueElement.getText());
+        else if(fieldType.equals(char.class))
+            return new Character(valueElement.getText().charAt(0));
+        else if(fieldType.equals(float.class))
+            return Float.valueOf(valueElement.getText());
+        else if(fieldType.equals(double.class))
+            return Double.valueOf(valueElement.getText());
+        else
+            return map.get(valueElement.getText());
+         
     }
 }
